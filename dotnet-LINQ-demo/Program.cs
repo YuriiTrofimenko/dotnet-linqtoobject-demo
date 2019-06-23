@@ -52,15 +52,60 @@ namespace dotnet_LINQ_demo
                 Console.WriteLine(item);
             }*/
 
-            //2
-            List<Student> strings = new List<Student>() {
+            // 2
+            /*List<Student> students = new List<Student>() {
                 new Student(){id = 3, firstName = "A1", lastName = "B10", age = 18, avgScore = 9.5 },
                 new Student(){id = 1, firstName = "A5", lastName = "B1", age = 20, avgScore = 10.5 },
                 new Student(){id = 5, firstName = "A4", lastName = "B100", age = 18, avgScore = 8 },
                 new Student(){id = 5, firstName = "A4", lastName = "B0", age = 18, avgScore = 8 }
             };
 
-            var result = strings.OrderBy((s) => s.firstName).ThenBy((s) => s.lastName);
+            // var result = students.OrderBy((s) => s.firstName).ThenBy((s) => s.lastName);
+
+            var students2 = students.Select((s) => new { Id = s.id, Name = $"{s.firstName} {s.lastName}" }).ToList();
+
+            foreach (var item in students2)
+            {
+                Console.WriteLine(item);
+            }*/
+
+            // 3
+            List<Group> groups = new List<Group>() {
+                new Group(){Id = 30, Name = "PSV 30-18" },
+                new Group(){Id = 12, Name = "PPV 30-18" }
+            };
+
+            List<Student2> students = new List<Student2>() {
+                new Student2(){id = 3, firstName = "A1", lastName = "B10", age = 18, avgScore = 9.5, groupId = 30 },
+                new Student2(){id = 1, firstName = "A5", lastName = "B1", age = 20, avgScore = 10.5, groupId = 12 },
+                new Student2(){id = 5, firstName = "A4", lastName = "B100", age = 18, avgScore = 8, groupId = 30 },
+                new Student2(){id = 4, firstName = "A7", lastName = "B2", age = 19, avgScore = 8, groupId = 12 },
+                new Student2(){id = 6, firstName = "A9", lastName = "B3", age = 18, avgScore = 8.5, groupId = 12 }
+            };
+
+            /*var result = students.GroupBy((s) => s.groupId).Select(
+                (gr) => new {
+                    Name = groups.Where((g) => g.Id == gr.Key).SingleOrDefault().Name,
+                    StudentsCount = gr.Count(),
+                    StudentsAvgScore = gr.Average((s) => s.avgScore)
+                }
+                );*/
+
+            var result = groups.Select((g) => students.Where((s) => s.groupId == g.Id)).Aggregate(
+                new List<GroupReport>(),
+                (reports, groupStudents) => {
+                    GroupReport report = new GroupReport();
+                    report.Name = groups.Where((g) => g.Id == groupStudents.FirstOrDefault().groupId).SingleOrDefault().Name;
+                    report.StudentsCount = groupStudents.Count();
+                    report.StudentsAvgScore = groupStudents.Average((s) => s.avgScore);
+                    reports.Add(report);
+                    return reports;
+                },
+                (reports) => { return reports; }
+                );
+
+            //Console.WriteLine(result);
+
             foreach (var item in result)
             {
                 Console.WriteLine(item);
