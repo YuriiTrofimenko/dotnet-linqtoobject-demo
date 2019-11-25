@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -85,14 +86,23 @@ namespace dotnet_LINQ_demo
 
             /*var result = students.GroupBy((s) => s.groupId).Select(
                 (gr) => new {
-                    Name = groups.Where((g) => g.Id == gr.Key).SingleOrDefault().Name,
+                    GroupName = groups.Where((g) => g.Id == gr.Key).SingleOrDefault().Name,
                     StudentsCount = gr.Count(),
                     StudentsAvgScore = gr.Average((s) => s.avgScore)
                 }
                 );*/
 
+            /*foreach (var item in result)
+            {
+                Console.WriteLine(item);
+            }*/
+            // На входе - две группы, на выходе - два списка студентов этих групп
             var result = groups.Select((g) => students.Where((s) => s.groupId == g.Id)).Aggregate(
+                // Инициализация выходного объекта
                 new List<GroupReport>(),
+                // Обработка каждого входного элемента,
+                // reports - аккумулятор (выходной объект)
+                // groupStudents - список студентов, входящих в одну группу
                 (reports, groupStudents) => {
                     GroupReport report = new GroupReport();
                     report.Name = groups.Where((g) => g.Id == groupStudents.FirstOrDefault().groupId).SingleOrDefault().Name;
@@ -105,11 +115,6 @@ namespace dotnet_LINQ_demo
                 );
 
             //Console.WriteLine(result);
-
-            foreach (var item in result)
-            {
-                Console.WriteLine(item);
-            }
         }
     }
 }
