@@ -81,23 +81,24 @@ namespace dotnet_LINQ_demo
                 new Student2(){id = 1, firstName = "A5", lastName = "B1", age = 20, avgScore = 10.5, groupId = 12 },
                 new Student2(){id = 5, firstName = "A4", lastName = "B100", age = 18, avgScore = 8, groupId = 30 },
                 new Student2(){id = 4, firstName = "A7", lastName = "B2", age = 19, avgScore = 8, groupId = 12 },
-                new Student2(){id = 6, firstName = "A9", lastName = "B3", age = 18, avgScore = 8.5, groupId = 12 }
+                new Student2(){id = 6, firstName = "A9", lastName = "B3", age = 18, avgScore = 8.5, groupId = 13 }
             };
 
             /*var result = students.GroupBy((s) => s.groupId).Select(
                 (gr) => new {
-                    GroupName = groups.Where((g) => g.Id == gr.Key).SingleOrDefault().Name,
-                    StudentsCount = gr.Count(),
-                    StudentsAvgScore = gr.Average((s) => s.avgScore)
-                }
-                );*/
+                        GroupName = groups.Where((g) => g.Id == gr.Key).SingleOrDefault()?.Name ?? "Unknown Group",
+                        StudentsCount = gr.Count(),
+                        StudentsAvgScore = gr.Average((s) => s.avgScore)
+                    }
+                );
 
-            /*foreach (var item in result)
+            foreach (var item in result)
             {
                 Console.WriteLine(item);
+                // Console.WriteLine("g");
             }*/
             // На входе - две группы, на выходе - два списка студентов этих групп
-            var result = groups.Select((g) => students.Where((s) => s.groupId == g.Id)).Aggregate(
+            /*var result = groups.Select((g) => students.Where((s) => s.groupId == g.Id)).Aggregate(
                 // Инициализация выходного объекта
                 new List<GroupReport>(),
                 // Обработка каждого входного элемента,
@@ -112,9 +113,22 @@ namespace dotnet_LINQ_demo
                     return reports;
                 },
                 (reports) => { return reports; }
-                );
+                );*/
+            Console.WriteLine("Loading 1 ...");
+            groups.ForEach(Console.WriteLine);
+            
+            Console.WriteLine("***");
+            groups.AsParallel().ForAll((g) => Console.WriteLine(g));
+            Console.WriteLine("Loading 2 ...");
 
+            /*foreach (var item in result)
+            {
+                Console.WriteLine(item);
+            }*/
             //Console.WriteLine(result);
+
+            short x = short.Parse("100500000");
+            int x1 = 100500000;
         }
     }
 }
